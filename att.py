@@ -16,6 +16,19 @@ def main(page: ft.Page):
     page.theme_mode = 'dark'
     page.window_center()
 
+    def close_dlg(e):
+        dlg_modal.open = False
+        page.update()
+
+    dlg_modal = ft.AlertDialog(
+        modal=True,
+        content=ft.Text("Arquivos atualizados"),
+        actions=[
+            ft.TextButton("OK", on_click=close_dlg),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+        on_dismiss=lambda e: print(""),
+    )
 
     feedback_msg = ft.Text(value="Nenhum arquivo selecionado!", color=ft.colors.WHITE)
     
@@ -25,12 +38,16 @@ def main(page: ft.Page):
         root = tk.Tk()
         root.withdraw()
         global file_path
+        page.splash = ft.ProgressBar()
+        page.update()
         file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
         if file_path:
             print(file_path)
         root.destroy()
         page.window_visible = True
+        page.update()
         feedback_msg.value = "Arquivo selecionado!"
+        page.splash = None
         page.update()
 
     def atualizar_dados(caminho_arquivo_excel):
@@ -69,6 +86,8 @@ def main(page: ft.Page):
             feedback_msg.value = "Atualizações efetuadas!"
             page.splash = None
             submit_btn.enabled = True
+            page.dialog = dlg_modal
+            dlg_modal.open = True
             page.update()
 
         conn.commit()

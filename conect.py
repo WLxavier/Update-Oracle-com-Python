@@ -2,7 +2,6 @@ import cx_Oracle
 
 oracle_client_initialized = False
 
-# Função para conectar ao banco de dados
 def conectar():
     global oracle_client_initialized
     

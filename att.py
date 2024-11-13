@@ -39,10 +39,8 @@ def main(page: ft.Page):
             page.update()
             return
 
-        # faz conexão
         conn = conectar()
 
-        # teste para verificar se conectou corretamente
         if conn is None:
             page.splash = ft.ProgressBar()
             page.update()
@@ -51,13 +49,10 @@ def main(page: ft.Page):
             page.update()
             return
 
-        # Cria um cursor para o banco
         cursor = conn.cursor()
 
-        # importa dados da planilha
         dados_excel = pd.read_excel(file_path)
 
-        # Loop pelos dados
         for indice, linha in dados_excel.iterrows():
             page.splash = ft.ProgressBar()
             submit_btn.enabled = False
@@ -73,19 +68,13 @@ def main(page: ft.Page):
 
         conn.commit()
 
-        # fecha o cursor
         cursor.close()
 
-        # fecha a conexão
         conn.close()
 
-    # Componentes da tela
     btn_selecionar_arquivo = ft.ElevatedButton(text='Selecionar arquivo Excel', width=1000, on_click=selecionar_arquivo)
     submit_btn = ft.ElevatedButton(text='Atualizar', width=600, on_click=atualizar_dados)
     
-
-    # configura os botões na tela
     page.add(btn_selecionar_arquivo, submit_btn, feedback_msg)
 
-# Inicia a tela
 ft.app(target=main)
